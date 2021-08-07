@@ -1,5 +1,7 @@
-import matplotlib
+import datetime
+import random
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 import tweepy
 
@@ -10,7 +12,7 @@ CONSUMER_SECRET = keys['consumer_secret']
 ACCESS_TOKEN = keys['access_token']
 ACCESS_TOKEN_SECRET = keys['access_token_secret']
 AT = keys['handle']
-y = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
@@ -25,24 +27,32 @@ except:
 
 def gathering():
     plt.style.use('seaborn')
-    list_of_datetimes = []
+    list_of_date_times = []
+    times = None
     for status in api.user_timeline(AT):
-
-        list_of_datetimes.append(str(status.created_at))  # time is in UTC
-
-    for dates in list_of_datetimes:
-        x = dates.split()[-1]
-        print(x)
+        list_of_date_times.append(str(status.created_at))  # time is in UTC
+        for dates in list_of_date_times:
+            times = dates.split()[-1]
+        plotting(times)
 
 
+def plotting(times):
+    # x =
+    # y =
 
-    # x = matplotlib.dates.date2num(list_of_datetimes)
-    # plt.plot_date(x, y)
-    # plt.tight_layout()
-    # plt.show()
+    # plot
+    plt.plot([], [])
+    plt.scatter(x, y)
+
+    # beautify the x-labels
+    plt.gcf().autofmt_xdate()
+    myFmt = mdates.DateFormatter('%H:%M')
+    plt.gca().xaxis.set_major_formatter(myFmt)
+
+    plt.show()
+    plt.close()
+
 
 
 if __name__ == "__main__":
-
-
-        gathering()
+    gathering()
