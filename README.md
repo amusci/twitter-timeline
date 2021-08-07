@@ -1,5 +1,10 @@
-# menace1
-I want to get the tweet activity of a user each day.
-Put it on a graph to analyze what time they are most accurate
+# menace
+Timeline of the last 20 tweets of a user.
+NEEDS API KEYS AND TWITTER HANDLE.
+
+If Linux errors try
+```
+sudo apt-get install python3-tk
+```
 
 
