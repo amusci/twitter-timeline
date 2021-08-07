@@ -87,7 +87,7 @@ def plotting(times, tweets):
 
 
 if __name__ == "__main__":
-    schedule.every().day.at("menace time").do(gathering)
+    schedule.every().day.at("menace time").do(gathering) # Set to the time you want this to run
 
     while True:
         schedule.run_pending()
