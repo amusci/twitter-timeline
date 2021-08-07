@@ -1,6 +1,9 @@
+import time
+import schedule
 import matplotlib.pyplot as plt
 import numpy as np
 import tweepy
+from datetime import date
 
 from keys import keys
 
@@ -79,8 +82,16 @@ def plotting(times, tweets):
     fig1 = plt.gcf()
     plt.show()
     plt.draw()
-    fig1.savefig('menace.png', dpi=100)
+    fig1.savefig('menace' + str(date.today()) +'.png', dpi=100)
+    print('Graph Exported.')
 
 
 if __name__ == "__main__":
-    gathering()
+    schedule.every().day.at("menace time").do(gathering)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+
