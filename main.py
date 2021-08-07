@@ -1,10 +1,8 @@
-import datetime
-import random
 import matplotlib.pyplot as plt
 import numpy as np
-
 import tweepy
 
+import datetime as dt
 from keys import keys
 
 CONSUMER_KEY = keys['consumer_key']
@@ -25,6 +23,7 @@ class Error(Exception):
 class Unverified(Error):
     pass
 
+
 try:
     api.verify_credentials()
     print("on")
@@ -39,7 +38,6 @@ def gathering():
     tweet_ids = []
 
     for status in api.user_timeline(AT):
-        # print(status.id)
         tweet_ids.append(str(status.id))
     for status in api.user_timeline(AT):
         list_of_date_times.append(str(status.created_at))  # time is in UTC
@@ -48,25 +46,40 @@ def gathering():
         times = dates.split()[-1]
         final.append(times)
 
-    print(final)
-    print(tweet_ids)
     plotting(final, tweet_ids)
 
 
 def plotting(times, id):
-    levels = np.tile([-5, -5, -5, -5, -5, -5], int(np.ceil(len(times) / 6)))[1]
+    # Line length so the IDS aren't covered
+    levels = np.tile([-5, 5, -3, 3, -1, 1],
+                     int(np.ceil(len(times) / 6)))[:len(times)]
 
     # Create figure and plot a stem plot with the times
-    fig, ax = plt.subplots(figsize=(8.8, 5), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(15, 5), constrained_layout=True)
     ax.set(title="Menace Activity")
+    marker_line, stem_line, baseline = ax.stem(times, levels,
+                                               linefmt="C3-", basefmt="k-",
+                                               use_line_collection=True)
 
-    ax.vlines(times, 0, levels, color="tab:red")  # Stems
-    ax.plot(times, np.zeros_like(times))  # Baseline
+    # Getting the vert
+    plt.setp(marker_line, mec="k", mfc="w", zorder=3)
+    marker_line.set_ydata(np.zeros(len(times)))
+    vert = np.array(['bottom', 'top'])[(levels > 0).astype(int)]
 
-    plt.setp(ax.get_xticklabels(), rotation=30, ha="center")
+    # Annotating the Stems
+    for d, l, r, va in zip(times, levels, id, vert):
+        ax.annotate(r, xy=(d, l), xytext=(60, np.sign(l) * 15),
+                    textcoords="offset points", va=va, ha="right")
 
+    # Remove y axis labels
+    ax.get_yaxis().set_visible(False)
+    for spine in ["left", "top", "right"]:
+        ax.spines[spine].set_visible(False)
+
+    # Show graph
     plt.show()
 
 
 if __name__ == "__main__":
     gathering()
+
