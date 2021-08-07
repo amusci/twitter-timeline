@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tweepy
 
-import datetime as dt
 from keys import keys
 
 CONSUMER_KEY = keys['consumer_key']
@@ -49,7 +48,7 @@ def gathering():
     plotting(final, tweet_ids)
 
 
-def plotting(times, id):
+def plotting(times, tweets):
     # Line length so the IDS aren't covered
     levels = np.tile([-5, 5, -3, 3, -1, 1],
                      int(np.ceil(len(times) / 6)))[:len(times)]
@@ -67,7 +66,7 @@ def plotting(times, id):
     vert = np.array(['bottom', 'top'])[(levels > 0).astype(int)]
 
     # Annotating the Stems
-    for d, l, r, va in zip(times, levels, id, vert):
+    for d, l, r, va in zip(times, levels, tweets, vert):
         ax.annotate(r, xy=(d, l), xytext=(60, np.sign(l) * 15),
                     textcoords="offset points", va=va, ha="right")
 
@@ -76,10 +75,12 @@ def plotting(times, id):
     for spine in ["left", "top", "right"]:
         ax.spines[spine].set_visible(False)
 
-    # Show graph
+    # Show and export graph
+    fig1 = plt.gcf()
     plt.show()
+    plt.draw()
+    fig1.savefig('menace.png', dpi=100)
 
 
 if __name__ == "__main__":
     gathering()
-
